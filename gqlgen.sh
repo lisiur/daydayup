@@ -1,0 +1,1 @@
+ gorunpkg github.com/99designs/gqlgen -v
