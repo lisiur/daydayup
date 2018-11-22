@@ -51,6 +51,6 @@ func (r *queryResolver) Todos(ctx context.Context) ([]models.Todo, error) {
 
 type todoResolver struct{ *Resolver }
 
-func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (models.User, error) {
-	return models.User{ID: obj.UserID, Name: "user " + obj.UserID}, nil
+func (r *todoResolver) User(ctx context.Context, todo *models.Todo) (models.User, error) {
+	return models.User{Name: "user" + todo.UserID}, nil
 }

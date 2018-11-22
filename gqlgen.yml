@@ -16,6 +16,8 @@ model:
 models:
   Todo:
     model: github.com/lisiur/daydayup/models.Todo
+  User:
+    model: github.com/lisiur/daydayup/models.User
 
 resolver:
   filename: resolver/resolver.go

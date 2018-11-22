@@ -5,6 +5,9 @@ import (
 	http "net/http"
 	os "os"
 
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+
 	handler "github.com/99designs/gqlgen/handler"
 	"github.com/lisiur/daydayup/graph/generated"
 	"github.com/lisiur/daydayup/resolver"
@@ -12,7 +15,15 @@ import (
 
 const defaultPort = "8080"
 
+var db *gorm.DB
+
 func main() {
+	db, err := gorm.Open("mysql", "root:root@/test?charset=utf8&parseTime=True&loc=Local")
+	defer db.Close()
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
