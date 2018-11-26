@@ -2,7 +2,13 @@
 
 package models
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Login struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+type Register struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }

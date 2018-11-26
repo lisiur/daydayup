@@ -9,20 +9,20 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	handler "github.com/99designs/gqlgen/handler"
+	"github.com/lisiur/daydayup/dbconn"
 	"github.com/lisiur/daydayup/graph/generated"
 	"github.com/lisiur/daydayup/resolver"
 )
 
-const defaultPort = "8080"
-
-var db *gorm.DB
+const defaultPort = "3000"
 
 func main() {
-	db, err := gorm.Open("mysql", "root:root@/test?charset=utf8&parseTime=True&loc=Local")
-	defer db.Close()
+	DB, err := gorm.Open("mysql", "root:root@/test?charset=utf8&parseTime=True&loc=Local")
+	defer DB.Close()
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
+	dbconn.DB = DB
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -33,5 +33,5 @@ func main() {
 	http.Handle("/query", handler.GraphQL(generated.NewExecutableSchema(generated.Config{Resolvers: &resolver.Resolver{}})))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe("localhost:"+port, nil))
 }

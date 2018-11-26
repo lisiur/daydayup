@@ -15,5 +15,5 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.LoginUser{})
 }
