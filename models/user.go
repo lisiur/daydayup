@@ -16,6 +16,11 @@ type User struct {
 	PasswordDigest string `gorm:"not null"`
 }
 
+func encodePassword(password string) string {
+	passwordDigestBytes := sha256.Sum256([]byte(password))
+	return hex.EncodeToString(passwordDigestBytes[:])
+}
+
 // All get all users.
 func (*User) All() ([]User, error) {
 	var users []User
@@ -27,10 +32,9 @@ func (*User) All() ([]User, error) {
 
 // Create create user.
 func (u *User) Create(input Register) error {
-	var passwordDigestBytes = sha256.Sum256([]byte(input.Password))
+	u.PasswordDigest = encodePassword(input.Password)
 	u.Name = input.Name
 	u.Email = input.Email
-	u.PasswordDigest = hex.EncodeToString(passwordDigestBytes[:])
 	if err := dbconn.DB.Create(u).Error; err != nil {
 		return err
 	}
@@ -55,11 +59,9 @@ func (u *User) FindByID(id uint) error {
 
 // Authentication .
 func (u *User) Authentication(input *Login) error {
-	var passwordDigestBytes = sha256.Sum256([]byte(input.Password))
-	var PasswordDigest = hex.EncodeToString(passwordDigestBytes[:])
 	err := u.Find(map[string]interface{}{
 		"name":            input.Name,
-		"password_digest": PasswordDigest,
+		"password_digest": encodePassword(input.Password),
 	})
 	return err
 }
